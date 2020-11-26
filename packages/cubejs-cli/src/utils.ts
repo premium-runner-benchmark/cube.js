@@ -3,9 +3,7 @@ import { spawn } from 'cross-spawn';
 import fs from 'fs-extra';
 import path from 'path';
 import chalk from 'chalk';
-import { machineIdSync } from 'node-machine-id';
-
-import { track } from './track';
+import { track } from '@cubejs-backend/shared';
 
 export const isDockerImage = () => Boolean(process.env.CUBEJS_DOCKER_IMAGE_TAG);
 
@@ -33,20 +31,6 @@ export const npmInstall = (dependencies: string[], isDev?: boolean) => executeCo
   'npm', ['install', isDev ? '--save-dev' : '--save'].concat(dependencies)
 );
 
-const anonymousId = machineIdSync();
-
-export const event = async (name: string, props?: any) => {
-  try {
-    await track({
-      event: name,
-      anonymousId,
-      ...props
-    });
-  } catch (e) {
-    // ignore
-  }
-};
-
 export const displayError = async (text: string|string[], options = {}) => {
   console.error('');
   console.error(chalk.cyan('Cube.js Error ---------------------------------------'));
@@ -61,7 +45,11 @@ export const displayError = async (text: string|string[], options = {}) => {
   console.error('');
   console.error(chalk.yellow('Need some help? -------------------------------------'));
 
-  await event('Error', { error: Array.isArray(text) ? text.join('\n') : text.toString(), ...options });
+  await track({
+    name: 'Error',
+    error: Array.isArray(text) ? text.join('\n') : text.toString(),
+    ...options
+  });
 
   console.error('');
   console.error(`${chalk.yellow('  Ask this question in Cube.js Slack:')} https://slack.cube.dev`);
@@ -111,8 +99,12 @@ export const requireFromPackage = async <T = any>(moduleName: string, relative: 
 
 export const logStage = async (stage: string, eventName: string, props?: any) => {
   console.log(`- ${stage}`);
+
   if (eventName) {
-    await event(eventName, props);
+    await track({
+      name: eventName,
+      ...props
+    });
   }
 };
 

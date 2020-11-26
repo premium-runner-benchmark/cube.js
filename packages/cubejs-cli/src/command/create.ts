@@ -4,9 +4,10 @@ import inquirer from 'inquirer';
 import path from 'path';
 import crypto from 'crypto';
 import { CommanderStatic } from 'commander';
+import { track } from '@cubejs-backend/shared';
+
 import {
   displayError,
-  event,
   executeCommand,
   loadCliManifest,
   npmInstall,
@@ -24,7 +25,10 @@ const create = async (projectName, options) => {
   options.template = options.template || 'docker';
   const createAppOptions = { projectName, dbType: options.dbType, template: options.template };
 
-  event('Create App', createAppOptions);
+  track({
+    name: 'Create App',
+    ...createAppOptions,
+  });
 
   if (await fs.pathExists(projectName)) {
     await displayError(
@@ -135,7 +139,12 @@ const create = async (projectName, options) => {
     await npmInstall(templateConfig.devDependencies);
   }
 
-  await event('Create App Success', { projectName, dbType: options.dbType });
+  await track({
+    name: 'Create App Success',
+    projectName,
+    dbType: options.dbType
+  });
+
   logStage(`${chalk.green(projectName)} app has been created 🎉`);
 
   console.log();
