@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import jwt from 'jsonwebtoken';
 import type { CommanderStatic } from 'commander';
-import { track } from '@cubejs-backend/shared';
+import { event } from '@cubejs-backend/shared';
 
 import { displayError, isDockerImage, requireFromPackage } from '../utils';
 
@@ -27,7 +27,7 @@ type TokenOptions = {
 };
 
 export const token = async (options: TokenOptions) => {
-  track({
+  event({
     name: 'Generate Token'
   });
 
@@ -65,7 +65,7 @@ export const token = async (options: TokenOptions) => {
   const signedToken = jwt.sign(payload, secret, extraOptions);
   console.log(`Token: ${chalk.green(signedToken)}`);
 
-  await track({
+  await event({
     name: 'Generate Token Success'
   });
 

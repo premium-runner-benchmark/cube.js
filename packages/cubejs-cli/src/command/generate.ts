@@ -1,7 +1,7 @@
 import fs from 'fs-extra';
 import path from 'path';
 import { CommanderStatic } from 'commander';
-import { track } from '@cubejs-backend/shared';
+import { event } from '@cubejs-backend/shared';
 
 import { displayError, isDockerImage, packageExists, requireFromPackage } from '../utils';
 
@@ -13,7 +13,7 @@ const logStage = (stage) => {
 const generate = async (options) => {
   const generateSchemaOptions = { tables: options.tables };
 
-  track({
+  event({
     name: 'Generate Schema',
     ...generateSchemaOptions,
   });
@@ -56,7 +56,7 @@ const generate = async (options) => {
   const files = scaffoldingTemplate.generateFilesByTableNames(options.tables);
   await Promise.all(files.map(file => fs.writeFile(path.join('schema', file.fileName), file.content)));
 
-  await track({
+  await event({
     name: 'Generate Schema Success',
     ...generateSchemaOptions
   });

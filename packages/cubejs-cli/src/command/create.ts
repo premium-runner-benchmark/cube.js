@@ -4,7 +4,7 @@ import inquirer from 'inquirer';
 import path from 'path';
 import crypto from 'crypto';
 import { CommanderStatic } from 'commander';
-import { track } from '@cubejs-backend/shared';
+import { event } from '@cubejs-backend/shared';
 
 import {
   displayError,
@@ -25,7 +25,7 @@ const create = async (projectName, options) => {
   options.template = options.template || 'docker';
   const createAppOptions = { projectName, dbType: options.dbType, template: options.template };
 
-  track({
+  event({
     name: 'Create App',
     ...createAppOptions,
   });
@@ -94,7 +94,7 @@ const create = async (projectName, options) => {
   if (driverDependencies[0] === '@cubejs-backend/jdbc-driver') {
     logStage('Installing JDBC dependencies');
 
-    // eslint-disable-next-line import/no-dynamic-require,global-require
+    // eslint-disable-next-line import/no-dynamic-require,global-require,@typescript-eslint/no-var-requires
     const JDBCDriver = require(path.join(process.cwd(), 'node_modules', '@cubejs-backend', 'jdbc-driver', 'driver', 'JDBCDriver'));
     const dbTypeDescription = JDBCDriver.dbTypeDescription(options.dbType);
     if (!dbTypeDescription) {
@@ -139,7 +139,7 @@ const create = async (projectName, options) => {
     await npmInstall(templateConfig.devDependencies);
   }
 
-  await track({
+  await event({
     name: 'Create App Success',
     projectName,
     dbType: options.dbType

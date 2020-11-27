@@ -2,7 +2,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import cliProgress from 'cli-progress';
 import { CommanderStatic } from 'commander';
-import { track } from '@cubejs-backend/shared';
+import { event } from '@cubejs-backend/shared';
 
 import { DeployDirectory } from '../deploy';
 import { logStage, displayError } from '../utils';
@@ -19,7 +19,7 @@ const deploy = async ({ directory, auth, uploadEnv, token }: any) => {
     const config = new Config();
     await config.addAuthToken(token);
 
-    await track({
+    await event({
       name: 'Cube Cloud CLI Authenticate'
     });
 

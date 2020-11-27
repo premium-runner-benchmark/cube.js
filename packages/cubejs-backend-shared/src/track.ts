@@ -59,9 +59,9 @@ try {
   // console.error(e);
 }
 
-export async function track(event: BaseEvent) {
+export async function track(opts: BaseEvent) {
   trackEvents.push({
-    ...event,
+    ...opts,
     id: crypto.randomBytes(16).toString('hex'),
     clientTimestamp: new Date().toJSON(),
     platform: process.platform,
@@ -77,4 +77,12 @@ export async function track(event: BaseEvent) {
 
   flushPromise = currentPromise;
   return flushPromise;
+}
+
+export async function event(opts: BaseEvent) {
+  try {
+    await track(opts);
+  } catch (e) {
+    // console.error(e);
+  }
 }

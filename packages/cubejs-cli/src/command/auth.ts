@@ -1,5 +1,5 @@
 import type { CommanderStatic } from 'commander';
-import { track } from '@cubejs-backend/shared';
+import { event } from '@cubejs-backend/shared';
 
 import { displayError } from '../utils';
 import { Config } from '../config';
@@ -8,7 +8,7 @@ const authenticate = async (currentToken: string) => {
   const config = new Config();
   await config.addAuthToken(currentToken);
 
-  await track({
+  await event({
     name: 'Cube Cloud CLI Authenticate'
   });
 
