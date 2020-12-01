@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import fetch from 'node-fetch';
 import { machineIdSync } from 'node-machine-id';
+import { internalExceptions } from './errors';
 
 export type BaseEvent = {
   name: string,
@@ -37,17 +38,20 @@ async function flush(toFlush?: Array<Event>, retries: number = 10): Promise<any>
     });
 
     if (result.status !== 200 && retries > 0) {
-      // eslint-disable-next-line consistent-return
-      return flush(toFlush, retries - 1);
+      await flush(toFlush, retries - 1);
+
+      return;
     }
 
     // console.log(await result.json());
   } catch (e) {
     if (retries > 0) {
-      // eslint-disable-next-line consistent-return
-      return flush(toFlush, retries - 1);
+      await flush(toFlush, retries - 1);
+
+      return;
     }
-    // console.log(e);
+
+    internalExceptions(e);
   }
 }
 
@@ -56,7 +60,7 @@ let anonymousId: string = 'unknown';
 try {
   anonymousId = machineIdSync();
 } catch (e) {
-  // console.error(e);
+  internalExceptions(e);
 }
 
 export async function track(opts: BaseEvent) {
@@ -83,6 +87,6 @@ export async function event(opts: BaseEvent) {
   try {
     await track(opts);
   } catch (e) {
-    // console.error(e);
+    internalExceptions(e);
   }
 }
