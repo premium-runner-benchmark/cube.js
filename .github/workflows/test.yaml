@@ -59,7 +59,7 @@ jobs:
   process:
     name: Process Perf Data
     runs-on: ubuntu-latest
-    needs: [lighthouseci]
+    needs: [unit]
     steps:
       - uses: actions/setup-python@v2
         with:
