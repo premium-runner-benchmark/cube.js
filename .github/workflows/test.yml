@@ -9,8 +9,8 @@ jobs:
     runs-on: ${{ matrix.runner_type }}
     strategy:
       matrix:
-        runner_type: [f64s]
-        #runner_type: [ds2v2,ds2v3,d2dsv4,d2asv4,d4asv4,ds3v2,ds4v2,ds5v2,f2s,f4s,f8s,f16s,f32s,f64s,ubuntu-latest]
+        #runner_type: [f64s]
+        runner_type: [ds2v2,ds2v3,d2dsv4,d2asv4,d4asv4,ds3v2,ds4v2,ds5v2,f2s,f4s,f8s,f16s,f32s,f64s,ubuntu-latest]
     env:
       runId: ${{ matrix.runner_type }}-${{ github.workflow }}
       artifactsDir: artifacts/${{ github.repository }}
