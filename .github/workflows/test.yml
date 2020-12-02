@@ -91,3 +91,4 @@ jobs:
           name: summary-perfdata
           path: runnerperf/output/summary.csv
           if-no-files-found: error
+
